@@ -1,1 +1,137 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Iframe + WhatsApp</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 20px;
+    }
+
+    .iframe-container {
+      position: relative;
+      width: 300px;
+      height: 200px;
+      border: 2px solid #ccc;
+      margin-bottom: 15px;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    .iframe-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0);
+      cursor: pointer;
+      z-index: 2;
+    }
+
+    #mensagem {
+      display: none;
+      background: #ffeb3b;
+      padding: 8px 12px;
+      margin-bottom: 10px;
+      border-radius: 6px;
+      font-weight: bold;
+      text-align: center;
+      width: 300px;
+    }
+
+    #whatsapp-form {
+      display: none;
+      flex-direction: column;
+      gap: 10px;
+      width: 300px;
+    }
+
+    input {
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    button {
+      padding: 10px;
+      background: #25D366;
+      color: white;
+      font-weight: bold;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #1ebe5d;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Clique na imagem abaixo para liberar</h2>
+
+  <div id="mensagem">Agora Clique novamente</div>
+
+  <div class="iframe-container">
+    <iframe id="meuIframe" src="https://ad2bitcoin.com/ad.php?ref=Cicerowbd&width=300" marginwidth="0" marginheight="0" width="300" height="250" scrolling="no" border="0" frameborder="0"></iframe>
+    <div class="iframe-overlay" id="overlay"></div>
+  </div>
+
+  <div id="whatsapp-form">
+    <input type="text" id="numero" placeholder="Digite seu número (com DDD, ex: 85912345678)">
+    <button id="enviar">Enviar pelo WhatsApp</button>
+  </div>
+
+  <script>
+    const overlay = document.getElementById("overlay");
+    const mensagem = document.getElementById("mensagem");
+    const form = document.getElementById("whatsapp-form");
+    const inputNumero = document.getElementById("numero");
+    const botaoEnviar = document.getElementById("enviar");
+
+    let iframeLiberado = false;
+    let formularioMostrado = false;
+
+    // Primeiro clique: remove o overlay e mostra mensagem
+    overlay.addEventListener("click", () => {
+      overlay.style.display = "none";
+      mensagem.style.display = "block";
+      iframeLiberado = true;
+    });
+
+    // Detecta clique no iframe (janela perde foco)
+    window.addEventListener("blur", () => {
+      if (iframeLiberado && !formularioMostrado) {
+        formularioMostrado = true;
+        mensagem.style.display = "none"; // esconde a mensagem
+        form.style.display = "flex"; // mostra o formulário
+      }
+    });
+
+    botaoEnviar.addEventListener("click", () => {
+      const numero = inputNumero.value.replace(/\D/g, "");
+      if (numero.length < 10 || numero.length > 11) {
+        alert("Por favor, insira um número válido com DDD.");
+        return;
+      }
+
+      const mensagemWhats = `Olá meu número é ${numero}, gostaria de receber destaque para um anúncio`;
+      const url = `https://wa.me/5588996088289?text=${encodeURIComponent(mensagemWhats)}`;
+      window.open(url, "_blank");
+    });
+  </script>
+
+</body>
+</html>
 
